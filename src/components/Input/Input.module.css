@@ -1,0 +1,74 @@
+.field {
+  display: block;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.wrap {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input::placeholder {
+  color: #a1a1aa;
+}
+
+.input:focus {
+  border-color: var(--text);
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+.hasIcon {
+  padding-right: 40px;
+}
+
+.invalid {
+  border-color: var(--danger);
+}
+
+.eye {
+  position: absolute;
+  inset: 0 0 0 auto;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: 0;
+  color: #a1a1aa;
+  cursor: pointer;
+}
+
+.eye:hover {
+  color: var(--text);
+}
+
+.error {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--danger);
+}
