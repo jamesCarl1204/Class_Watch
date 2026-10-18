@@ -1,24 +1,46 @@
 # ClassWatch (Teacher Portal)
 
-React + Vite, CSS Modules. Walang API call pa — UI at validation lang.
+ClassWatch is a proctoring and activity-detection system for online classes and exams. It gives teachers a live dashboard of what students do in their browsers: tab switches, window focus loss, and pastes that look like AI-generated text. Teachers can inspect a student's activity timeline and send warnings straight to the student's screen.
 
-## Run
+> **Status:** Teacher authentication and the dashboard UI are done. Live sessions, the student Chrome extension, and real-time telemetry are still in progress.
+
+## Tech Stack
+
+<p>
+  <img src="https://skillicons.dev/icons?i=react,vite,nodejs,express,mysql,css,js" alt="React, Vite, Node.js, Express, MySQL, CSS, JavaScript" />
+</p>
+
+React · Vite · React Router · CSS Modules · Node.js · Express · MySQL · JWT · bcrypt
+
+## Features
+
+- Teacher register, login, and logout with JWT httpOnly cookie sessions
+- Live dashboard: stat cards, student roster with search and risk filters, activity feed
+- Per-student timeline and warning alerts
+- Light and dark theme
+
+## Run Locally
+
 ```bash
+# frontend
+npm install
+npm run dev
+
+# backend
+cd server
 npm install
 npm run dev
 ```
 
-## Structure
-```
-src/
-  components/   reusable UI (Button, Input, Header, Footer, Toast, ThemeToggle)
-  layouts/      AuthLayout (hero + form side)
-  pages/        Login, Register
-  context/      ToastContext
-  hooks/        useTheme
-  utils/        validators
-  styles/       global tokens (light/dark) + shared auth form styles
-```
+Create `server/.env`:
 
-## Next step (API)
-Hanapin ang `// TODO: API` sa `pages/Login/Login.jsx` at `pages/Register/Register.jsx`.
+```env
+PORT=3000
+CLIENT_URL=http://localhost:5173
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=classwatch
+JWT_SECRET=a_long_random_string
+```

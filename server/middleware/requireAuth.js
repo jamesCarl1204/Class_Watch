@@ -5,7 +5,7 @@ export default function requireAuth(req, res, next) {
   if (!token) return res.status(401).json({ message: 'Not authenticated' });
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
     req.teacherId = payload.id;
     next();
   } catch {
