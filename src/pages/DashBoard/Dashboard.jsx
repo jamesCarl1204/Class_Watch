@@ -3,7 +3,7 @@ import { Users, Browsers, Robot, ChartLineUp, UserMinus } from '@phosphor-icons/
 import {
   StatCard, RosterToolbar, StudentCard, ActivityFeed,
   StudentDetailModal, WarningModal, EmptyState,
-} from '../../components/DashboardComponents/DashboardComponents.jsx';
+} from '../../components/Dashboardcomponents/Dashboardcomponents.jsx';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {

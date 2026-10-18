@@ -1,34 +1,48 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Info } from '@phosphor-icons/react';
 import Input from '../../components/Input/Input.jsx';
 import Button from '../../components/Button/Button.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
-import { validateEmail, validatePassword } from '../../utils/validators.js';
 import styles from '../../styles/authForm.module.css';
 
 export default function Login() {
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '', remember: false });
-  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const next = {
-      email: validateEmail(form.email),
-      password: validatePassword(form.password),
-    };
-    setErrors(next);
-    if (next.email || next.password) return;
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(form),
+      });
 
-    // TODO: API — call login endpoint here (email, password, remember)
-    showToast('Form valid — API not connected yet', 'info');
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.message || 'Login failed', 'error');
+        return;
+      }
+
+      showToast(`Welcome back, ${data.teacher.username}!`, 'success');
+      navigate('/dashboard');
+    } catch {
+      showToast('Network error. Please try again.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,7 +66,6 @@ export default function Login() {
           placeholder="professor@university.edu"
           value={form.email}
           onChange={handleChange}
-          error={errors.email}
           autoComplete="email"
         />
 
@@ -64,7 +77,6 @@ export default function Login() {
           placeholder="••••••••••••"
           value={form.password}
           onChange={handleChange}
-          error={errors.password}
           autoComplete="current-password"
           rightLabel={
             <a
@@ -85,8 +97,8 @@ export default function Login() {
           <span>Keep session active on this device</span>
         </label>
 
-        <Button type="submit" icon={<ArrowRight weight="bold" size={14} />}>
-          Sign In
+        <Button type="submit" icon={<ArrowRight weight="bold" size={14} />} disabled={loading}>
+          {loading ? 'Signing in…' : 'Sign In'}
         </Button>
       </form>
 

@@ -1,34 +1,48 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Info } from '@phosphor-icons/react';
 import Input from '../../components/Input/Input.jsx';
 import Button from '../../components/Button/Button.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
-import { validateEmail, validatePassword } from '../../utils/validators.js';
 import styles from '../../styles/authForm.module.css';
 
 export default function Register() {
   const { showToast } = useToast();
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const next = {
-      email: validateEmail(form.email),
-      password: validatePassword(form.password, { min: 8 }),
-    };
-    setErrors(next);
-    if (next.email || next.password) return;
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(form),
+      });
 
-    // TODO: API — call register endpoint here (email, password)
-    showToast('Form valid — API not connected yet', 'info');
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.message || 'Registration failed', 'error');
+        return;
+      }
+
+      showToast('Account created! Welcome.', 'success');
+      navigate('/dashboard');
+    } catch {
+      showToast('Network error. Please try again.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,6 +59,17 @@ export default function Register() {
         </div>
 
         <Input
+          id="username"
+          name="username"
+          type="text"
+          label="Username"
+          placeholder="prof_smith"
+          value={form.username}
+          onChange={handleChange}
+          autoComplete="username"
+        />
+
+        <Input
           id="email"
           name="email"
           type="email"
@@ -52,7 +77,6 @@ export default function Register() {
           placeholder="professor@university.edu"
           value={form.email}
           onChange={handleChange}
-          error={errors.email}
           autoComplete="email"
         />
 
@@ -64,12 +88,11 @@ export default function Register() {
           placeholder="••••••••••••"
           value={form.password}
           onChange={handleChange}
-          error={errors.password}
           autoComplete="new-password"
         />
 
-        <Button type="submit" icon={<ArrowRight weight="bold" size={14} />}>
-          Register
+        <Button type="submit" icon={<ArrowRight weight="bold" size={14} />} disabled={loading}>
+          {loading ? 'Creating account…' : 'Register'}
         </Button>
       </form>
 
