@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { register, login, logout, me } from '../controllers/authController.js';
-import { registerRules, loginRules, validate } from '../validators/authValidator.js';
+import { registerRules, loginRules, validate } from '../validator/authValidator.js';
 import requireAuth from '../middleware/requireAuth.js';
 
 const router = Router();

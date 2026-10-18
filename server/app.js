@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import authRoutes from './routes/auth.js';
+import authRoutes from './routes/authRoutes.js';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is missing in .env');
@@ -25,5 +25,5 @@ app.use('/api/auth', authRoutes);
 
 app.use((req, res) => res.status(404).json({ message: 'Not found' }));
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`API running on http://localhost:${port}`));

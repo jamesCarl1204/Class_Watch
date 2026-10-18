@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import Teacher from '../models/Teacher.js';
+import Teacher from '../models/authModel.js';
 
 const COOKIE_NAME = 'token';
 const DUMMY_HASH = bcrypt.hashSync('dummy-password', 12);
