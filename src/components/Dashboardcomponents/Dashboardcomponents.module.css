@@ -946,3 +946,9 @@
   background: var(--danger-solid);
   color: #fff;
 }
+
+.hdr_primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

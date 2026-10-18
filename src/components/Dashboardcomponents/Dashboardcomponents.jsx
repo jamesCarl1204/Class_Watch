@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import {
   Copy, MagnifyingGlass, Browsers, Robot, Eye, Warning, WarningCircle,
-  Lightning, Info, Pulse, Broadcast, X,
+  Lightning, Info, Pulse, Broadcast, X,SignOut,
 } from '@phosphor-icons/react';
 import ThemeToggle from '../ThemeToggle/ThemeToggle.jsx';
 import {
   RISK_FILTERS, FEED_FILTERS, STATUS_META, EVENT_TONE, WARNING_PRESETS,
 } from '../../constants/dashboard.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 import styles from './DashboardComponents.module.css';
 
 /* ========== Badge ========== */
@@ -50,6 +51,7 @@ export function EmptyState({ icon, title, description }) {
 
 /* ========== DashboardHeader ========== */
 export function DashboardHeader({ sessionName, sessionCode, isLive = false }) {
+ const { teacher, logout } = useAuth()
   return (
     <header className={styles.hdr_header}>
       <div className={styles.hdr_inner}>
@@ -85,7 +87,10 @@ export function DashboardHeader({ sessionName, sessionCode, isLive = false }) {
           <button type="button" className={styles.hdr_primary}>
             Start Session
           </button>
-
+          <span className={styles.hdr_codeLabel}>{teacher?.username}</span>
+          <button type="button" className={styles.hdr_primary} onClick={logout}>
+            <SignOut weight="bold" size={12} /> Logout
+          </button>
           <ThemeToggle />
         </div>
       </div>

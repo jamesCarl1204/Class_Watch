@@ -4,10 +4,13 @@ import { ArrowRight, Info } from '@phosphor-icons/react';
 import Input from '../../components/Input/Input.jsx';
 import Button from '../../components/Button/Button.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { api } from '../../utils/api.js';
 import styles from '../../styles/authForm.module.css';
 
 export default function Register() {
   const { showToast } = useToast();
+  const { setTeacher } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -22,24 +25,16 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/register', {
+      const { teacher } = await api('/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(form),
+        body: form,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        showToast(data.message || 'Registration failed', 'error');
-        return;
-      }
-
+      setTeacher(teacher);
       showToast('Account created! Welcome.', 'success');
       navigate('/dashboard');
-    } catch {
-      showToast('Network error. Please try again.', 'error');
+    } catch (err) {
+      showToast(err.message, 'info');
     } finally {
       setLoading(false);
     }

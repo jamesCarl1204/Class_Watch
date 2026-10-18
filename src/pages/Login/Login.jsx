@@ -4,11 +4,14 @@ import { ArrowRight, Info } from '@phosphor-icons/react';
 import Input from '../../components/Input/Input.jsx';
 import Button from '../../components/Button/Button.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { api } from '../../utils/api.js';
 import styles from '../../styles/authForm.module.css';
 
 export default function Login() {
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const { setTeacher } = useAuth();
   const [form, setForm] = useState({ email: '', password: '', remember: false });
   const [loading, setLoading] = useState(false);
 
@@ -22,24 +25,16 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const { teacher } = await api('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(form),
+        body: { email: form.email, password: form.password, remember: form.remember },
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        showToast(data.message || 'Login failed', 'error');
-        return;
-      }
-
-      showToast(`Welcome back, ${data.teacher.username}!`, 'success');
+      setTeacher(teacher);
+      showToast(`Welcome back, ${teacher.username}!`, 'success');
       navigate('/dashboard');
-    } catch {
-      showToast('Network error. Please try again.', 'error');
+    } catch (err) {
+      showToast(err.message, 'info');
     } finally {
       setLoading(false);
     }
