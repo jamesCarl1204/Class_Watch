@@ -4,7 +4,7 @@ import DashboardLayout from './layouts/DashboardLayout.jsx';
 import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
 import Dashboard from './pages/DashBoard/Dashboard.jsx';
-import ProtectedRoute, { GuestRoute } from './components/ProtectedRoute/ProtectedRoute.jsx';
+import ProtectedRoute, { GuestRoute } from './components/protectedRoute/protectedRoute.jsx';
 
 export default function App() {
   return (
