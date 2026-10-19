@@ -2,3 +2,4 @@
      min-width: 340px;
      min-height: 300px;
    }
+   html, body, #root { height: auto; }
