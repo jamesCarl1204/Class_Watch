@@ -4,6 +4,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
+import sessionRoutes from './routes/sessionRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is missing in .env');
@@ -24,6 +26,8 @@ app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/sessions', sessionRoutes);
+app.use('/api', eventRoutes);
 
 app.use((req, res) => res.status(404).json({ message: 'Not found' }));
 

@@ -33,3 +33,9 @@ export function validate(req, res, next) {
     errors: Object.fromEntries(errors.map((e) => [e.path, e.msg])),
   });
 }
+
+export const joinRules = [
+  body('code').trim().isLength({ min: 4, max: 12 }).withMessage('Invalid session code'),
+  body('name').trim().isLength({ min: 1, max: 120 }).withMessage('Name is required'),
+  body('studentId').trim().isLength({ min: 1, max: 50 }).withMessage('Student ID is required'),
+];
