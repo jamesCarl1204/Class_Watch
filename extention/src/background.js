@@ -42,7 +42,7 @@ function reportTab(tab, switched) {
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
   try {
     reportTab(await chrome.tabs.get(tabId), true);
-  } catch { /* nasara na ang tab */ }
+  } catch {  }
 });
 
 chrome.tabs.onUpdated.addListener((_id, info, tab) => {

@@ -5,7 +5,6 @@ const TYPES = new Set([
   'tab_switch', 'window_blur', 'window_focus', 'copy', 'paste', 'ai_site_open',
 ]);
 
-// Linisin ang metadata galing sa extension (huwag magtiwala sa input)
 function clean(m = {}) {
   const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : undefined);
   return {
@@ -17,7 +16,6 @@ function clean(m = {}) {
   };
 }
 
-// Server ang nagpapasya ng severity, hindi ang extension
 function classify(type, m) {
   if (type === 'ai_site_open') return 'critical';
   if (type === 'paste') {
