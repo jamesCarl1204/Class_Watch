@@ -4,6 +4,8 @@ import Input from '../components/Input/Input.jsx';
 import Button from '../components/Button/Button.jsx';
 import styles from './App.module.css';
 
+const API = 'http://localhost:3000/api';
+
 export default function App() {
   const [form, setForm] = useState({ code: '', name: '', studentId: '' });
   const [session, setSession] = useState(null);
@@ -15,6 +17,12 @@ export default function App() {
       setSession(data.session ?? null);
       setLoading(false);
     });
+
+    const onChange = (c) => {
+      if (c.session) setSession(c.session.newValue ?? null);
+    };
+    chrome.storage.onChanged.addListener(onChange);
+    return () => chrome.storage.onChanged.removeListener(onChange);
   }, []);
 
   const handleChange = (e) => {
@@ -30,15 +38,32 @@ export default function App() {
       return setError('Fill in all fields');
     }
 
-    // TODO: palitan ng API call (POST /api/sessions/join) kapag may backend na
-    const joined = {
-      code: form.code.trim().toUpperCase(),
-      name: form.name.trim(),
-      studentId: form.studentId.trim(),
-    };
+    const code = form.code.trim().toUpperCase();
 
-    await chrome.storage.local.set({ session: joined });
-    setSession(joined);
+    try {
+      const res = await fetch(`${API}/sessions/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code,
+          name: form.name.trim(),
+          studentId: form.studentId.trim(),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return setError(data.message || 'Could not join');
+
+      const joined = {
+        code,
+        name: form.name.trim(),
+        studentId: form.studentId.trim(),
+        token: data.token,
+      };
+      await chrome.storage.local.set({ session: joined });
+      setSession(joined);
+    } catch {
+      setError('Cannot reach server');
+    }
   };
 
   const handleLeave = async () => {
