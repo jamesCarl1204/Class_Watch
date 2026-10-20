@@ -5,7 +5,7 @@ import styles from './DashboardLayout.module.css';
 export default function DashboardLayout() {
   return (
     <div className={styles.shell}>
-      <DashboardHeader sessionName="" sessionCode="" isLive={false} />
+      <DashboardHeader />
       <main className={styles.main}>
         <Outlet />
       </main>

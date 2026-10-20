@@ -9,15 +9,15 @@ import {
 } from '../../constants/dashboard.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import styles from './DashboardComponents.module.css';
+import { useSession } from '../../context/SessionContext.jsx';
+import { useToast } from '../../context/ToastContext.jsx';
 
-/* ========== Badge ========== */
 export function Badge({ tone = 'neutral', mono = false, children }) {
   return (
     <span className={`${styles.badge_badge} ${styles[`badge_${tone}`]} ${mono ? styles.badge_mono : ''}`}>{children}</span>
   );
 }
 
-/* ========== Modal ========== */
 export function Modal({ open, onClose, size = 'md', children }) {
   if (!open) return null;
 
@@ -38,7 +38,6 @@ export function Modal({ open, onClose, size = 'md', children }) {
   );
 }
 
-/* ========== EmptyState ========== */
 export function EmptyState({ icon, title, description }) {
   return (
     <div className={styles.empty_box}>
@@ -49,9 +48,38 @@ export function EmptyState({ icon, title, description }) {
   );
 }
 
-/* ========== DashboardHeader ========== */
-export function DashboardHeader({ sessionName, sessionCode, isLive = false }) {
- const { teacher, logout } = useAuth()
+export function DashboardHeader() {
+  const { teacher, logout } = useAuth();
+  const { session, startSession, endSession } = useSession();
+  const { showToast } = useToast();
+  const isLive = !!session;
+
+  const handleStart = async () => {
+    const name = window.prompt('Session name?');
+    if (name === null) return;
+    try {
+      await startSession(name);
+      showToast('Session started', 'success');
+    } catch (err) {
+      showToast(err.message, 'info');
+    }
+  };
+
+  const handleEnd = async () => {
+    try {
+      await endSession();
+      showToast('Session ended', 'info');
+    } catch (err) {
+      showToast(err.message, 'info');
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!session) return;
+    await navigator.clipboard.writeText(session.code);
+    showToast('Code copied', 'success');
+  };
+
   return (
     <header className={styles.hdr_header}>
       <div className={styles.hdr_inner}>
@@ -63,7 +91,7 @@ export function DashboardHeader({ sessionName, sessionCode, isLive = false }) {
               <span className={styles.hdr_tag}>PROCTOR PORTAL</span>
             </div>
             <div className={styles.hdr_session}>
-              Session: <strong>{sessionName || '—'}</strong>
+              Session: <strong>{session?.name || '—'}</strong>
             </div>
           </div>
         </div>
@@ -76,17 +104,22 @@ export function DashboardHeader({ sessionName, sessionCode, isLive = false }) {
 
           <div className={styles.hdr_code}>
             <span className={styles.hdr_codeLabel}>CODE:</span>
-            <strong>{sessionCode || '—'}</strong>
-            {/* TODO: copy-to-clipboard */}
-            <button type="button" className={styles.hdr_copy} title="Copy session code">
+            <strong>{session?.code || '—'}</strong>
+            <button type="button" className={styles.hdr_copy} title="Copy session code" onClick={handleCopy}>
               <Copy weight="bold" size={12} />
             </button>
           </div>
 
-          {/* TODO: start / end session */}
-          <button type="button" className={styles.hdr_primary}>
-            Start Session
-          </button>
+          {isLive ? (
+            <button type="button" className={styles.hdr_primary} onClick={handleEnd}>
+              End Session
+            </button>
+          ) : (
+            <button type="button" className={styles.hdr_primary} onClick={handleStart}>
+              Start Session
+            </button>
+          )}
+
           <span className={styles.hdr_codeLabel}>{teacher?.username}</span>
           <button type="button" className={styles.hdr_primary} onClick={logout}>
             <SignOut weight="bold" size={12} /> Logout
@@ -98,7 +131,6 @@ export function DashboardHeader({ sessionName, sessionCode, isLive = false }) {
   );
 }
 
-/* ========== StatCard ========== */
 export function StatCard({ label, icon, value = '—', suffix, hint, tone = 'neutral' }) {
   return (
     <div className={styles.stat_card}>
@@ -117,7 +149,6 @@ export function StatCard({ label, icon, value = '—', suffix, hint, tone = 'neu
   );
 }
 
-/* ========== RosterToolbar ========== */
 export function RosterToolbar({ search, onSearchChange, riskFilter, onRiskChange }) {
   return (
     <div className={styles.toolbar_bar}>
@@ -148,11 +179,7 @@ export function RosterToolbar({ search, onSearchChange, riskFilter, onRiskChange
   );
 }
 
-/* ========== StudentCard ========== */
-/**
- * student: { id, name, initials, status, focusScore, currentTab, isAiTab,
- *            switches, pastes, timeAway }
- */
+
 export function StudentCard({ student, onInspect, onWarn }) {
   const meta = STATUS_META[student.status] ?? STATUS_META.normal;
   const border = student.status === 'high' ? styles.card_high : student.status === 'warning' ? styles.card_warn : '';
@@ -213,12 +240,9 @@ function Metric({ label, value, danger, warn }) {
   );
 }
 
-/* ========== ActivityFeed ========== */
 const ICONS = { critical: Lightning, warning: Warning, info: Info };
 
-/**
- * events: [{ id, time, type: 'critical' | 'warning' | 'info', student, text }]
- */
+
 export function ActivityFeed({ events = [], severity, onSeverityChange, onClear }) {
   return (
     <section className={styles.feed_panel}>
@@ -283,11 +307,7 @@ export function ActivityFeed({ events = [], severity, onSeverityChange, onClear 
   );
 }
 
-/* ========== StudentDetailModal ========== */
-/**
- * student: { id, name, initials, focusScore, switches, pastes,
- *            timeline: [{ time, type, event, detail }] }
- */
+
 export function StudentDetailModal({ student, onClose, onWarn }) {
   return (
     <Modal open={!!student} onClose={onClose} size="lg">
@@ -346,13 +366,11 @@ function Summary({ label, value, tone }) {
   );
 }
 
-/* ========== WarningModal ========== */
 export function WarningModal({ student, onClose, onSend }) {
   const [preset, setPreset] = useState(WARNING_PRESETS[0].message);
   const [note, setNote] = useState('');
 
   const handleSend = () => {
-    // TODO: API — send warning to the student's extension
     onSend?.({ student, message: preset, note });
   };
 
