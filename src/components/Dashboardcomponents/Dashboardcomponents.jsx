@@ -9,7 +9,7 @@ import {
 } from '../../constants/dashboard.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import styles from './DashboardComponents.module.css';
-import { useSession } from '../../context/SessionContext.jsx';
+import { useSession } from '../../context/SessionsContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 
 export function Badge({ tone = 'neutral', mono = false, children }) {

@@ -5,6 +5,7 @@ import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
 import Dashboard from './pages/DashBoard/Dashboard.jsx';
 import ProtectedRoute, { GuestRoute } from './components/protectedRoute/protectedRoute.jsx';
+import { SessionProvider } from './context/SessionsContext.jsx';
 
 export default function App() {
   return (
@@ -17,7 +18,14 @@ export default function App() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route
+          path="/dashboard"
+          element={
+            <SessionProvider>
+              <DashboardLayout />
+            </SessionProvider>
+          }
+        >
           <Route index element={<Dashboard />} />
         </Route>
       </Route>

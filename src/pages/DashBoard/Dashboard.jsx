@@ -1,20 +1,39 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Users, Browsers, Robot, ChartLineUp, UserMinus } from '@phosphor-icons/react';
 import {
   StatCard, RosterToolbar, StudentCard, ActivityFeed,
   StudentDetailModal, WarningModal, EmptyState,
 } from '../../components/Dashboardcomponents/Dashboardcomponents.jsx';
+import { useSession } from '../../context/SessionsContext.jsx';
+import useLiveSession from '../../hooks/useLiveSessions.js';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
-  const students = [];
-  const events = [];
+  const { session } = useSession();
+  const { stats, students: allStudents, events: rawEvents } = useLiveSession(session?.id);
 
   const [search, setSearch] = useState('');
   const [riskFilter, setRiskFilter] = useState('all');
   const [feedSeverity, setFeedSeverity] = useState('all');
   const [inspected, setInspected] = useState(null);
   const [warnTarget, setWarnTarget] = useState(null);
+
+  const students = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return allStudents.filter(
+      (s) =>
+        (riskFilter === 'all' || s.status === riskFilter) &&
+        (!q || s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q))
+    );
+  }, [allStudents, search, riskFilter]);
+
+  const events = useMemo(
+    () =>
+      rawEvents
+        .filter((e) => feedSeverity === 'all' || e.type === feedSeverity)
+        .map((e) => ({ ...e, time: new Date(e.at).toLocaleTimeString() })),
+    [rawEvents, feedSeverity]
+  );
 
   const openWarning = (student) => {
     setInspected(null);
@@ -24,14 +43,15 @@ export default function Dashboard() {
   return (
     <>
       <section className={styles.stats}>
-        <StatCard label="Active Students" icon={<Users weight="bold" size={14} />} value="0" />
+        <StatCard label="Active Students" icon={<Users weight="bold" size={14} />} value={stats.active} />
+        <StatCard label="Tab Switches" icon={<Browsers weight="bold" size={14} />} value={stats.tabSwitches} />
+        <StatCard label="Flagged AI Pastes" icon={<Robot weight="bold" size={14} />} value={stats.aiPastes} />
         <StatCard
-          label="Tab Switches"
-          icon={<Browsers weight="bold" size={14} />}
-          value="0"
+          label="Avg Focus Score"
+          icon={<ChartLineUp weight="bold" size={14} />}
+          value={stats.avgFocus ?? '—'}
+          suffix={stats.avgFocus != null ? '%' : undefined}
         />
-        <StatCard label="Flagged AI Pastes" icon={<Robot weight="bold" size={14} />} value="0" />
-        <StatCard label="Avg Focus Score" icon={<ChartLineUp weight="bold" size={14} />} value="—" />
       </section>
 
       <div className={styles.grid}>
@@ -48,7 +68,11 @@ export default function Dashboard() {
               <EmptyState
                 icon={<UserMinus weight="bold" size={28} />}
                 title="No students connected"
-                description="Start a session and share the code so students can join from the extension."
+                description={
+                  session
+                    ? 'Waiting for students to join with the session code.'
+                    : 'Start a session first, then share the code.'
+                }
               />
             </div>
           ) : (
