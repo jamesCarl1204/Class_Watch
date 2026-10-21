@@ -214,6 +214,8 @@ export function StudentCard({ student, onInspect, onWarn }) {
         <Metric label="Tab Switches" value={student.switches} warn={student.switches > 3} />
         <Metric label="AI Pastes" value={student.pastes} danger={student.pastes > 0} />
         <Metric label="Time Away" value={student.timeAway} />
+        <Metric label="AI Sites" value={student.aiOpens} danger={student.aiOpens > 0} />
+<Metric label="Copies" value={student.copies} warn={student.copies > 5} />
       </div>
 
       <div className={styles.card_actions}>

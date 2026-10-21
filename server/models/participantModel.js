@@ -19,6 +19,7 @@ const Participant = {
     return rows[0].id;
   },
 
+
   async findByTokenHash(hash) {
     const [rows] = await pool.execute(
       `SELECT p.id, p.session_id, s.status
@@ -41,6 +42,7 @@ const Participant = {
               SUM(e.type = 'window_blur') AS blurs,
               SUM(e.type = 'paste' AND e.severity = 'critical') AS ai_pastes,
               SUM(e.type = 'ai_site_open') AS ai_opens
+              SUM(e.type = 'copy') AS copies
        FROM participants p
        LEFT JOIN events e ON e.participant_id = p.id
        WHERE p.session_id = ?

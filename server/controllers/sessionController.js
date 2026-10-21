@@ -97,7 +97,7 @@ export async function live(req, res) {
       const blurs = Number(s.blurs) || 0;
       const aiPastes = Number(s.ai_pastes) || 0;
       const aiOpens = Number(s.ai_opens) || 0;
-
+      const copies =  Number(s.copies) || 0;
       const focusScore = Math.max(
         0,
         100 - switches * 3 - blurs * 2 - aiPastes * 15 - aiOpens * 10
@@ -116,8 +116,11 @@ export async function live(req, res) {
         isAiTab: tab?.type === 'ai_site_open' || !!tab?.metadata?.isAi,
         switches,
         pastes: aiPastes,
+        aiOpens,
+        copies,
         timeAway: '—',
         online: !!Number(s.online),
+        
       };
     });
 
@@ -128,6 +131,7 @@ export async function live(req, res) {
         active: students.filter((s) => s.online).length,
         tabSwitches: sum('switches'),
         aiPastes: sum('pastes'),
+        aiOpens: sum('aiOpens'),
         avgFocus: students.length ? Math.round(sum('focusScore') / students.length) : null,
       },
       students,
