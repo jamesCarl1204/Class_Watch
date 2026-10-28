@@ -1,6 +1,6 @@
-# ClassWatch (Teacher Portal)
+# AssessWatch (Online Assessment Monitoring)
 
-ClassWatch is a proctoring and activity-detection system for online classes and exams. It gives teachers a live dashboard of what students do in their browsers: tab switches, window focus loss, and pastes that look like AI-generated text. Teachers can inspect a student's activity timeline and send warnings straight to the student's screen.
+AssessWatch is an online assessment and interview activity-monitoring system. It provides a dashboard for reviewing browser activity signals such as tab switches, window focus loss, and paste events. These signals can provide context for follow-up, but are not proof of misconduct.
 
 > **Status:** Teacher authentication and the dashboard UI are done. Live sessions, the student Chrome extension, and real-time telemetry are still in progress.
 
