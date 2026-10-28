@@ -1,6 +1,6 @@
 # AssessWatch (Online Assessment Monitoring)
 
-AssessWatch is an online assessment and interview activity-monitoring system. It provides a dashboard for reviewing browser activity signals such as tab switches, window focus loss, and paste events. These signals can provide context for follow-up, but are not proof of misconduct.
+AssessWatch is an online assessment and interview activity-monitoring system. It provides a dashboard for reviewing browser activity signals such as tab switches, window focus loss, AI-related paste activity, and access to AI websites during an assessment.
 
 > **Status:** Teacher authentication and the dashboard UI are done. Live sessions, the student Chrome extension, and real-time telemetry are still in progress.
 
@@ -17,6 +17,7 @@ React · Vite · React Router · CSS Modules · Node.js · Express · MySQL · J
 - Teacher register, login, and logout with JWT httpOnly cookie sessions
 - Live dashboard: stat cards, student roster with search and risk filters, activity feed
 - Per-student timeline and warning alerts
+- Monitoring signals for tab switches, window focus loss, AI-related paste activity, and AI website access
 - Light and dark theme
 
 ## Run Locally
