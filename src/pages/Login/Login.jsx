@@ -43,22 +43,22 @@ export default function Login() {
   return (
     <>
       <div className={styles.heading}>
-        <h2 className={styles.title}>Teacher Login</h2>
-        <p className={styles.subtitle}>Authenticate your proctoring credentials</p>
+        <h2 className={styles.title}>Host Sign In</h2>
+        <p className={styles.subtitle}>Manage online assessments and interviews</p>
       </div>
 
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <div className={styles.info}>
           <Info weight="bold" size={16} />
-          <span>Teacher Dashboard: View live student tabs &amp; AI alerts.</span>
+          <span>Review browser activity signals and flagged events from your sessions.</span>
         </div>
 
         <Input
           id="email"
           name="email"
           type="email"
-          label="Institutional Email"
-          placeholder="professor@university.edu"
+          label="Email address"
+          placeholder="you@example.com"
           value={form.email}
           onChange={handleChange}
           autoComplete="email"
@@ -98,7 +98,7 @@ export default function Login() {
       </form>
 
       <div className={styles.footer}>
-        New teacher?
+        New to ClassWatch?
         <Link to="/register">Create account</Link>
       </div>
     </>
