@@ -77,7 +77,7 @@ export default function App() {
   if (session) {
     return (
       <div className={styles.wrap}>
-        <h1 className={styles.title}>ClassWatch</h1>
+        <h1 className={styles.title}>AssessWatch</h1>
         <p className={styles.subtitle}>Your activity is being monitored.</p>
 
         <div className={styles.status}>
