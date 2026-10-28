@@ -18,7 +18,7 @@
 
 .grid {
   width: 100%;
-  max-width: 896px;
+  max-width: 1024px;
   display: grid;
   grid-template-columns: 1fr;
   gap: 48px;
@@ -28,7 +28,7 @@
 @media (min-width: 768px) {
   .grid {
     grid-template-columns: 1fr 1fr;
-    gap: 64px;
+    gap: 72px;
   }
 }
 
