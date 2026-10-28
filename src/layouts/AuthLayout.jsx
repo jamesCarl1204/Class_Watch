@@ -14,32 +14,36 @@ export default function AuthLayout() {
           <section className={styles.hero}>
             <div className={styles.badge}>
               <ShieldCheck weight="bold" size={14} />
-              <span>Proctoring &amp; Activity Detection</span>
+              <span>Online Assessment Monitoring</span>
             </div>
 
             <h1 className={styles.title}>
               MONITOR.
               <br />
-              DETECT.
+              REVIEW.
               <br />
-              PROTECT.
+              RESPOND.
             </h1>
 
             <p className={styles.desc}>
-              Real-time browser telemetry for educators. Track tab switches, window blur events, and
-              instant AI text pastes seamlessly.
+              Support online exams, technical assessments, and interviews with browser activity
+              signals. Review flagged events to help guide a fair follow-up.
             </p>
 
             <ul className={styles.checklist}>
               <li>
                 <Check weight="bold" size={14} />
-                <span>Tab &amp; background window focus logger</span>
+                <span>Tab switches &amp; window-focus activity</span>
               </li>
               <li>
                 <Check weight="bold" size={14} />
-                <span>Clipboard speed &amp; LLM pattern detector</span>
+                <span>Clipboard events and activity alerts for review</span>
               </li>
             </ul>
+            <p className={styles.desc}>
+              Activity signals can provide context, but they are not proof of misconduct and cannot
+              prevent every form of cheating.
+            </p>
           </section>
 
           <section>
