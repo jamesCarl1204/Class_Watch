@@ -1,3 +1,4 @@
+import { Eye } from '@phosphor-icons/react';
 import ThemeToggle from '../ThemeToggle/ThemeToggle.jsx';
 import styles from './Header.module.css';
 
@@ -5,8 +6,10 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.brand}>
-        <div className={styles.logo}>CW</div>
-        <span className={styles.name}>CLASSWATCH</span>
+        <div className={styles.logo} aria-hidden="true">
+          <Eye weight="bold" size={19} />
+        </div>
+        <span className={styles.name}>ASSESSWATCH</span>
       </div>
 
       <div className={styles.right}>
