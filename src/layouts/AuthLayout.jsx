@@ -37,13 +37,9 @@ export default function AuthLayout() {
               </li>
               <li>
                 <Check weight="bold" size={14} />
-                <span>Clipboard events and activity alerts for review</span>
+                <span>AI-related paste detection and AI website access alerts</span>
               </li>
             </ul>
-            <p className={styles.desc}>
-              Activity signals can provide context, but they are not proof of misconduct and cannot
-              prevent every form of cheating.
-            </p>
           </section>
 
           <section>
